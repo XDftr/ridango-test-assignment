@@ -23,7 +23,6 @@ const CocktailGuessingContainer = ({gameSession, onSubmit}) => {
     }
 
     const handleSubmit = () => {
-        console.log(guessedLetters)
         const guessedWord = guessedLetters.map(letter => letter === '' ? ' ' : letter).join('')
         onSubmit(guessedWord)
     }
@@ -67,7 +66,7 @@ const CocktailGuessingContainer = ({gameSession, onSubmit}) => {
                         <Form.Control
                             type="text"
                             maxLength="1"
-                            value={guessedLetters[index] || ''} // Ensure input is controlled
+                            value={guessedLetters[index] || ''}
                             onChange={(e) => handleInputChange(index, e)}
                             className="text-center"
                             readOnly={gameSession.revealedLetters[index] !== undefined || gameSession.spaceIndexes.includes(index)}

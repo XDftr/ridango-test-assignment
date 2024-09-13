@@ -4,7 +4,137 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="admin">
+    <changeSet id="0.0.1" author="Deniel Konstantinov">
+        <createTable tableName="cocktail">
+            <column name="cocktail_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cocktail_cocktail_id"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="instructions" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="glass" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="api_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
+        <createTable tableName="ingredients">
+            <column name="ingredients_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_ingredients_ingredients_id"/>
+            </column>
+            <column name="cocktail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ingredient" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ingredients"
+                                 baseColumnNames="cocktail_id"
+                                 constraintName="fk_ingredients_cocktail_id_cocktail_cocktail_id"
+                                 referencedTableName="cocktail"
+                                 referencedColumnNames="cocktail_id"/>
+
+        <createTable tableName="player">
+            <column name="player_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_player_player_id"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createTable tableName="game_session">
+            <column name="game_session_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_game_session_game_session_id"/>
+            </column>
+            <column name="player_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cocktail_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attempts_left" type="smallint" defaultValueNumeric="5">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_completed" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="game_session" 
+                                 baseColumnNames="player_id" 
+                                 constraintName="fk_game_session_player_id_player_player_id" 
+                                 referencedTableName="player"
+                                 referencedColumnNames="player_id"/>
+        
+        <addForeignKeyConstraint baseTableName="game_session"
+                                 baseColumnNames="cocktail_id"
+                                 constraintName="fk_game_session_cocktail_id_cocktail_cocktail_id"
+                                 referencedTableName="cocktail"
+                                 referencedColumnNames="cocktail_id"/>
+        
+        <createTable tableName="revealed_letters">
+            <column name="revealed_letters_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_revealed_letters_revealed_letters_id"/>
+            </column>
+            <column name="game_session_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="letter_position" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="letter" type="char(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="revealed_letters"
+                                 baseColumnNames="game_session_id"
+                                 constraintName="fk_revealed_letters_game_session_id_game_session_game_session_id"
+                                 referencedTableName="game_session"
+                                 referencedColumnNames="game_session_id"/>
+        
+        <createTable tableName="revealed_info">
+            <column name="revealed_info_id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_revealed_info_revealed_info_id"/>
+            </column>
+            <column name="game_session_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="glass" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ingredients" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="picture" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="revealed_info"
+                                 baseColumnNames="game_session_id"
+                                 constraintName="fk_revealed_info_game_session_id_game_session_game_session_id"
+                                 referencedTableName="game_session"
+                                 referencedColumnNames="game_session_id"/>
     </changeSet>
 </databaseChangeLog>
